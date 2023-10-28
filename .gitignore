@@ -17,6 +17,7 @@ env3.*
 env
 docs_build
 venv
+virtualenv
 docs.zip
 archive.zip
 
@@ -25,3 +26,4 @@ archive.zip
 .*.sw?
 
 .env
+

@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-MYSQL_URL = "mysql+pymysql://root:123456@localhost:3306/buraco_db?charset=utf8"
+MYSQL_URL = "mysql+pymysql://root:123456@localhost:3306/crime_db?charset=utf8"
 POOL_SIZE = 20
 POOL_RECYCLE = 3600
 POOL_TIMEOUT = 15
