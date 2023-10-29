@@ -10,7 +10,7 @@ from sqlalchemy import (
     TEXT,
     DateTime,
     Date,
-    Time
+    Time,
 )
 from sqlalchemy.orm import relationship
 
@@ -34,7 +34,8 @@ class PessoaCrime(Base):
     tipoVinculoPessoa = Column(String(50))
     relacionamento = Column(String(50))
     parentesco = Column(String(50))
-    
+
+
 class VeiculoCrime(Base):
     __tablename__ = "VeiculoCrime"
     id = Column(INTEGER, primary_key=True)
@@ -47,15 +48,14 @@ class VeiculoCrime(Base):
     anoModeloVeiculo = Column(String(50))
     tipoVeiculo = Column(String(50))
 
+
 class CelularCrime(Base):
     __tablename__ = "CelularCrime"
     id = Column(INTEGER, primary_key=True)
     quantidadeCelular = Column(INTEGER)
     marcaCelular = Column(String(50))
 
-    
-    
-    
+
 class Crime(Base):
     __tablename__ = "Crime"
     id = Column(INTEGER, primary_key=True)
@@ -86,7 +86,7 @@ class Crime(Base):
     pessoaCrimeId = Column(INTEGER, ForeignKey("PessoaCrime.id"))
     veiculoCrimeId = Column(INTEGER, ForeignKey("VeiculoCrime.id"))
     celularCrimeId = Column(INTEGER, ForeignKey("CelularCrime.id"))
-    
+
     pessoaCrime = relationship("PessoaCrime", backref="Crime")
     veiculoCrime = relationship("VeiculoCrime", backref="Crime")
     celularCrime = relationship("CelularCrime", backref="Crime")
