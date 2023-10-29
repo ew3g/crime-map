@@ -55,3 +55,16 @@ def QuestaoListResponse(list):
     for questao in list:
         response.append(QuestaoResponse(questao))
     return response
+
+def CrimeResponse(model):
+    return {
+        "id": model.id,
+        "latitude": model.latitude,
+        "longitude": model.longitude
+    }
+
+def CrimeListResponse(list):
+    response = []
+    for crime in list:
+        response.append(CrimeResponse(crime))
+    return response

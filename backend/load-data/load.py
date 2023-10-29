@@ -31,8 +31,6 @@ session = database.get_db_session(engine)
 
 columns = defaultdict(list)
 with open("./data/" + "abril-furto.csv", newline="\n", encoding="utf8") as f:
-    # reader = csv.reader(f, delimiter=",")
-    # your_list = list(reader)
     reader = csv.DictReader(f)
     for row in reader:
         
@@ -43,10 +41,8 @@ with open("./data/" + "abril-furto.csv", newline="\n", encoding="utf8") as f:
         )
         
         if crime_existent:
-            #print(row["NUM_BO"] + " already exists")
             continue
         
-        #print(row["BO_EMITIDO"])
     
         celular_crime = CelularCrime()
         veiculo_crime = VeiculoCrime()
@@ -131,8 +127,32 @@ with open("./data/" + "abril-furto.csv", newline="\n", encoding="utf8") as f:
         crime.endCidade = row["CIDADE"]
         crime.endUf = row["UF"]
         crime.endDescricao = row["DESCRICAOLOCAL"]
-        crime.latitude = row["LATITUDE"]
-        crime.longitude = row["LONGITUDE"]
+        
+        latitude = row["LATITUDE"]
+        longitude = row["LONGITUDE"]
+        latitude = latitude.replace(",", "")
+        longitude = longitude.replace(",", "")
+        
+        newlat = ""
+        if latitude != "":
+            for i in range(0, len(latitude)):
+                if latitude[0] == "-" and i == 3:
+                    newlat += ","
+                if latitude[0] != "-" and i == 2:
+                    newlat += ","
+                newlat += latitude[i]
+                
+        newlong = ""
+        if longitude != "":
+            for i in range(0, len(longitude)):
+                if longitude[0] == "-" and i == 3:
+                    newlong += ","
+                if longitude[0] != "-" and i == 2:
+                    newlong += ","
+                newlong += longitude[i]
+        
+        crime.latitude = newlat
+        crime.longitude = newlong
         crime.solucao = row["SOLUCAO"]
         crime.delegaciaNome = row["DELEGACIA_NOME"]
         crime.delegaciaCircunscricao = row["DELEGACIA_CIRCUNSCRICAO"]
@@ -148,69 +168,6 @@ with open("./data/" + "abril-furto.csv", newline="\n", encoding="utf8") as f:
         session.add(crime)
         session.flush()
         session.commit()
-        #print(crime.registroBO)
         print(str(crime.numeroBO) + " added")
        
-        
-        
-#         print(
-#             #row["ANO_BO"],
-#             #row["NUM_BO"],
-#             #######################################################row["NUMERO_BOLETIM"],
-#             #row["BO_INICIADO"],
-#             #row["BO_EMITIDO"],
-#             #row["DATAOCORRENCIA"],
-#             #row["HORAOCORRENCIA"],
-#             #row["PERIDOOCORRENCIA"],
-#             #row["DATACOMUNICACAO"],
-#             #row["DATAELABORACAO"],
-#             ############################################################row["BO_AUTORIA"],
-#             #row["FLAGRANTE"],
-#             ############################################################row["NUMERO_BOLETIM_PRINCIPAL"],
-#             #row["LOGRADOURO"],
-#             #row["NUMERO"],
-#             #row["BAIRRO"],
-#             #row["CIDADE"],
-#             #row["UF"],
-#             #row["LATITUDE"],
-#             #row["LONGITUDE"],
-#             #row["DESCRICAOLOCAL"],
-#             ############################################################row["EXAME"],
-#             #row["SOLUCAO"],
-#             #row["DELEGACIA_NOME"],
-#             #row["DELEGACIA_CIRCUNSCRICAO"],
-#             ############################################################row["ESPECIE"],
-#             #row["RUBRICA"],
-#             #row["DESDOBRAMENTO"],
-#             #row["STATUS"],
-#             #row["TIPOPESSOA"],
-#             #row["VITIMAFATAL"],
-#             #row["NATURALIDADE"],
-#             #row["NACIONALIDADE"],
-#             #row["SEXO"],
-#             #row["DATANASCIMENTO"],
-#             #row["IDADE"],
-#             #row["ESTADOCIVIL"],
-#             #row["PROFISSAO"],
-#             #row["GRAUINSTRUCAO"],
-#             #row["CORCUTIS"],
-#             #row["NATUREZAVINCULADA"],
-#             #row["TIPOVINCULO"],
-#             #row["RELACIONAMENTO"],
-#             #row["PARENTESCO"],
-#             #row["PLACA_VEICULO"],
-#             #row["UF_VEICULO"],
-#             #row["CIDADE_VEICULO"],
-#             #row["DESCR_COR_VEICULO"],
-#             #row["DESCR_MARCA_VEICULO"],
-#             #row["ANO_FABRICACAO"],
-#             #row["ANO_MODELO"],
-#             #row["DESCR_TIPO_VEICULO"],
-#             #row["QUANT_CELULAR"],
-#             #row["MARCA_CELULAR"],
-#         )
-# #       for k, v in row.items():
-# #           columns[k].append(v)
-
-# print(columns["ANO_BO"])
 session.close()
