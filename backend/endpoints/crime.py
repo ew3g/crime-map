@@ -35,7 +35,7 @@ async def read_crime_location_by_city(city: str, year: int = None):
     data = (
         session.query(Crime)
         .filter(
-            Crime.endCidade == city,
+            and_(Crime.endCidade == city, Crime.latitude != "", Crime.longitude != ""),
             or_(Crime.ano == year, year == None),
         )
         .all()

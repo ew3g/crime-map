@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Profile from './components/Profile'
-import Login from './components/Login';
+//import Login from './components/Login';
 import EsqueciSenha from './components/EsqueciSenha';
 import Home from './components/Home';
 import TrocarSenha from './components/TrocarSenha';
@@ -14,7 +14,7 @@ const App = () => {
     <div>
       <Router>
         <Routes>
-          <Route exact path="/" element={<Login />} />
+          <Route exact path="/" element={<Home />} />
           <Route exact path="/home" element={<Home />} />
           <Route exact path="/perfil" element={<Profile />} />
           <Route exact path="/esqueci-senha" element={<EsqueciSenha />} />

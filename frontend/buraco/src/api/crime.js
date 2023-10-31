@@ -1,13 +1,12 @@
 import api from './axiosConfig';
 
 export const getCrimes = async () => {
-    const response = await api.get('crime/city/guarulhos?year=2023')
+    const response = await api.get('/buraco')
         .catch(function (error) {
             console.log(error)
         });
     return response.data;
 };
-
 
 export const getBuracos = async () => {
     const response = await api.get('/buraco')
