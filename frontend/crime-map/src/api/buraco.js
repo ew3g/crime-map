@@ -1,13 +1,34 @@
 import api from './axiosConfig';
+import axios from 'axios';
 
-export const getCrimes = async () => {
-    const response = await api.get('crime/city/guarulhos?year=2023')
+
+export const getCrimes = async (ano) => {
+    var url = '/crime/city/guarulhos';
+    if (ano && ano != '') {
+        url += '?year=' + ano
+    }
+    console.log(url);
+    const response = await api.get(url)
         .catch(function (error) {
             console.log(error)
         });
     return response.data;
 };
 
+export const getCrimesComuns = async () => {
+    var url = "/statistics/common-crimes/city/guarulhos";
+    //const res = await api.get(url);
+
+    var resp = "";
+    var res = axios.get("http://localhost:8080" + url, { responseType: 'blob' }).then(axios.spread((...responses) => {
+        responses.map((res) => (
+            //console.log(URL.createObjectURL(res.data))
+            resp = URL.createObjectURL(res.data)
+        ))
+    }));
+
+    return resp;
+}
 
 export const getBuracos = async () => {
     const response = await api.get('/buraco')

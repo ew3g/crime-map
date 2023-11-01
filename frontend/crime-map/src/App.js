@@ -8,6 +8,7 @@ import EsqueciSenha from './components/EsqueciSenha';
 import Home from './components/Home';
 import TrocarSenha from './components/TrocarSenha';
 import NovoUsuario from './components/NovoUsuario'
+import Estatisticas from './components/Estatisticas';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route exact path="/" element={<Home />} />
+          <Route exact path="/estatisticas" element={<Estatisticas />} />
           <Route exact path="/home" element={<Home />} />
           <Route exact path="/perfil" element={<Profile />} />
           <Route exact path="/esqueci-senha" element={<EsqueciSenha />} />

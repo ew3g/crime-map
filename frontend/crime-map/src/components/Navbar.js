@@ -15,7 +15,7 @@ const AppNavbar = () => {
                     <LinkContainer to="/home">
                         <Nav.Link>Mapa</Nav.Link>
                     </LinkContainer>
-                    <LinkContainer to="/estatistica">
+                    <LinkContainer to="/estatisticas">
                         <Nav.Link>Estatisticas</Nav.Link>
                     </LinkContainer>
                 </Nav>

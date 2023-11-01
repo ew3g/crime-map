@@ -155,5 +155,5 @@ def CrimeListResponse(list):
 def CrimeLocationListResponse(list):
     response = []
     for crime in list:
-        response.append(CrimeLocationResponse(crime))
+        response.append(CrimeResponse(crime))
     return response
