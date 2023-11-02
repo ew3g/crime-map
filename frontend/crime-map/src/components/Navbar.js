@@ -16,7 +16,7 @@ const AppNavbar = () => {
                         <Nav.Link>Mapa</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/estatisticas">
-                        <Nav.Link>Estatisticas</Nav.Link>
+                        <Nav.Link>Estatísticas</Nav.Link>
                     </LinkContainer>
                 </Nav>
             </Navbar.Collapse>

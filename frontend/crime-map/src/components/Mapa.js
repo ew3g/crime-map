@@ -8,7 +8,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet';
 
 //import { getBuracos, getCrimes, votoBuraco, createBuraco } from "../api/buraco";
-import { getCrimes, getCrimeDetail } from "../api/buraco";
+import { getCrimes } from "../api/buraco";
 
 //import { getTamanhosBuraco } from "../api/tamanhoBuraco";
 
@@ -68,85 +68,6 @@ const Mapa = () => {
     }, [ano]);
 
 
-    // async function handleVotoBuraco(buracoId) {
-    //     const data = await votoBuraco(buracoId);
-    //     console.log(data)
-    //     window.location.reload(false);
-    // }
-
-
-    // const handleMapClick = (event) => {
-    //     setMarkerPosition(event.latlng)
-    // }
-
-    // const handleMarkerConfirm = async () => {
-    //     const lat = markerPosition.lat;
-    //     const lng = markerPosition.lng;
-
-    //     console.log(markerPosition);
-    //     if (!checkSeDentroDeGuarulhos(lat, lng)) {
-    //         alert('O buraco deve estar dentro dos limites da cidade de Guarulhos!');
-    //         return;
-    //     }
-
-    //     const request = {
-    //         "latitude": lat.toString(),
-    //         "longitude": lng.toString(),
-    //         "tamanho_buraco_id": Number(tamanhoBuracoSelecionado),
-    //         "usuario_id": Number(localStorage.getItem('usuarioId')),
-    //     }
-    //     console.log(request);
-    //     const data = await createBuraco(request);
-    //     console.log(data);
-
-    //     setMarkerPosition(null);
-    //     window.location.reload(false);
-
-    // }
-
-    // const checkSeDentroDeGuarulhos = (latitude, longitude) => {
-    //     const guarulhosBounds = {
-    //         north: -23.367433,
-    //         south: -23.516082,
-    //         west: -46.570909,
-    //         east: -46.373725
-    //     };
-
-    //     if (
-    //         latitude >= guarulhosBounds.south &&
-    //         latitude <= guarulhosBounds.north &&
-    //         longitude >= guarulhosBounds.west &&
-    //         longitude <= guarulhosBounds.east
-    //     ) {
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
-
-
-    // function MapClickHandler() {
-    //     useMapEvents({
-    //         click: handleMapClick,
-    //     });
-    //     return null;
-    // }
-
-
-    // const PopupMarker = (props) => {
-    //     const leafletRef = useRef();
-    //     useEffect(() => {
-    //         leafletRef.current.openPopup();
-    //     }, [])
-    //     return <Marker ref={leafletRef} {...props} />
-    // }
-
-
-    // const handleTamanhoBuracoSelectChange = (event) => {
-    //     console.log(event.target.value);
-    //     setTamanhoBuracoSelecionado(event.target.value);
-    // }
-
 
     const position = [-23.455, -46.533]
 
@@ -155,7 +76,7 @@ const Mapa = () => {
             <div className="selectors-container">
                 <div className="row">
                     <div className="col-md-12">
-                        <select className="form-select" value={ano} onChange={handleAnoSelecionadoChange}>
+                        <select className="form-select" value={ano} onChange={handleAnoSelecionadoChange} defaultValue={2023}>
                             <option value="2023">2023</option>
                             <option value="2022">2022</option>
                             <option value="2021">2021</option>

@@ -93,6 +93,78 @@ async def get_hist_flagrant(city: str, year: int = None):
     buf.seek(0)
     return StreamingResponse(buf, media_type="image/png")
 
+@router.get(
+    "/common-solutions/city/{city}", responses={200: {"content": {"image/png": {}}}}
+)
+async def get_common_solutions(city: str, year: int = None):
+    session = database.get_db_session(engine)
+    df = pd.read_sql(
+        session.query(Crime)
+        .filter(
+            and_(Crime.endCidade == city, Crime.latitude != "", Crime.longitude != ""),
+            or_(Crime.ano == year, year == None),
+        )
+        .statement,
+        session.bind,
+    )
+
+    # df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
+    df["solucao"].value_counts().plot(kind="bar")
+    plt.tight_layout()
+
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    buf.seek(0)
+    return StreamingResponse(buf, media_type="image/png")
+
+@router.get(
+    "/common-police-departments/city/{city}", responses={200: {"content": {"image/png": {}}}}
+)
+async def get_common_police_departments(city: str, year: int = None):
+    session = database.get_db_session(engine)
+    df = pd.read_sql(
+        session.query(Crime)
+        .filter(
+            and_(Crime.endCidade == city, Crime.latitude != "", Crime.longitude != ""),
+            or_(Crime.ano == year, year == None),
+        )
+        .statement,
+        session.bind,
+    )
+
+    # df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
+    df["delegaciaCircunscricao"].value_counts().plot(kind="bar")
+    plt.tight_layout()
+
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    buf.seek(0)
+    return StreamingResponse(buf, media_type="image/png")
+
+@router.get(
+    "/common-day-period/city/{city}", responses={200: {"content": {"image/png": {}}}}
+)
+async def get_common_day_period(city: str, year: int = None):
+    session = database.get_db_session(engine)
+    df = pd.read_sql(
+        session.query(Crime)
+        .filter(
+            and_(Crime.endCidade == city, Crime.latitude != "", Crime.longitude != ""),
+            or_(Crime.ano == year, year == None),
+        )
+        .statement,
+        session.bind,
+    )
+
+    # df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
+    df["periodoOcorrencia"].value_counts().plot(kind="bar")
+    plt.tight_layout()
+
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    buf.seek(0)
+    return StreamingResponse(buf, media_type="image/png")
+
 
 # id                                 int64
 # ano                                int64
