@@ -1,16 +1,8 @@
-//import { React, useState, useEffect, useRef } from "react";
 import { React, useState, useEffect } from "react";
 import 'leaflet/dist/leaflet.css';
-
-//import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
-
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet';
-
-//import { getBuracos, getCrimes, votoBuraco, createBuraco } from "../api/buraco";
-import { getCrimes } from "../api/buraco";
-
-//import { getTamanhosBuraco } from "../api/tamanhoBuraco";
+import { getCrimes } from "../api/crime";
 
 
 const markerIcon = () => {
@@ -24,107 +16,34 @@ const markerIcon = () => {
     });
 }
 
-
 const Mapa = () => {
-    const [buracos, setBuracos] = useState([]);
-    //const [tamanhosBuraco, setTamanhosBuraco] = useState([])
-
-    //const [tamanhoBuracoSelecionado, setTamanhoBuracoSelecionado] = useState('')
-
-    //const [markerPosition, setMarkerPosition] = useState(null)
-
-    const [ano, setAno] = useState('')
-
-    const fetchCrimes = async () => {
-        const data = await getCrimes(ano);
-        //console.log('rodou')
-        //console.log(data);
-        setBuracos(data)
-    };
-
-    const handleAnoSelecionadoChange = (event) => {
-        console.log(event.target.value);
-        setAno(event.target.value);
-        fetchCrimes();
-        //window.location.reload(false);
-    }
-
+    const [crimes, setCrimes] = useState([]);
     useEffect(() => {
-        const fetchBuracos = async () => {
-            const data = await getCrimes(ano);
-            //console.log('rodou')
-            //console.log(data);
-            setBuracos(data)
+        const fetchCrimes = async () => {
+            const data = await getCrimes(2023);
+            setCrimes(data)
         };
+        fetchCrimes();
+    }, []);
 
-        // const fetchTamanhosBuraco = async () => {
-        //     const data = await getTamanhosBuraco();
-        //     console.log(data);
-        //     setTamanhosBuraco(data);
-        // }
-
-        fetchBuracos();
-        //fetchTamanhosBuraco();
-    }, [ano]);
-
-
-
-    const position = [-23.455, -46.533]
+    const centerPosition = [-23.455, -46.533]
 
     return (
         <div>
-            <div className="selectors-container">
+            <div className="header-container">
                 <div className="row">
                     <div className="col-md-12">
-                        <select className="form-select" value={ano} onChange={handleAnoSelecionadoChange} defaultValue={2023}>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2021">2021</option>
-                            <option value="2020">2020</option>
-                            <option value="2019">2019</option>
-                        </select>
+                        <span>Dados referentes ao ano de 2023</span>
                     </div>
                 </div>
             </div>
-            <MapContainer center={position} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100%" }}>
+            <br />
+            <MapContainer center={centerPosition} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100%" }}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {/* <MapClickHandler /> */}
-                {/* {markerPosition && (
-                <PopupMarker position={markerPosition} icon={markerIcon("blue")}>
-                    <Popup>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <span> Deseja cadastrar um buraco aqui?</span>
-                                </div>
-                                <br /><br />
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <select className="form-select" value={tamanhoBuracoSelecionado} onChange={handleTamanhoBuracoSelectChange}>
-                                            <option value="null">Tamanho do Buraco</option>
-                                            {tamanhosBuraco.map(tamanhoBuraco => (
-                                                <option key={tamanhoBuraco.id} value={tamanhoBuraco.id}>
-                                                    {tamanhoBuraco.nome}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <br />
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <button className="btn btn-primary" onClick={handleMarkerConfirm}>Confirmar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </Popup>
-                </PopupMarker>
-            )} */}
-                {buracos.map((crime) => (
+                {crimes.map((crime) => (
                     <Marker key={crime.id} position={[Number(crime.latitude), Number(crime.longitude)]} icon={markerIcon()}>
                         <Popup>
                             <div className="container">

@@ -1,11 +1,8 @@
 import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-//import { useNavigate } from "react-router-dom";
 
 const AppNavbar = () => {
-    //const navigate = useNavigate();
-
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
             <Navbar.Brand>Mapa Crimes</Navbar.Brand>

@@ -20,9 +20,9 @@ engine = database.get_db_connection()
 
 
 @router.get(
-    "/common-crimes/city/{city}", responses={200: {"content": {"image/png": {}}}}
+    "/bar/common-crimes/city/{city}", responses={200: {"content": {"image/png": {}}}}
 )
-async def get_common_crimes(city: str, year: int = None):
+async def get_bar_common_crimes(city: str, year: int = None):
     session = database.get_db_session(engine)
     df = pd.read_sql(
         session.query(Crime)
@@ -35,19 +35,23 @@ async def get_common_crimes(city: str, year: int = None):
     )
 
     df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
-    df["rubrica"].value_counts().plot(kind="bar")
+    df["rubrica"].value_counts().nlargest(5).plot(kind="bar")
+
+    plt.title("Bairros com mais crimes registrados")
+    plt.xlabel("Bairro")
     plt.tight_layout()
 
     buf = BytesIO()
     plt.savefig(buf, format="png")
+    plt.clf()
     buf.seek(0)
     return StreamingResponse(buf, media_type="image/png")
 
 
 @router.get(
-    "/common-neighborhoods/city/{city}", responses={200: {"content": {"image/png": {}}}}
+    "/pie/common-crimes/city/{city}", responses={200: {"content": {"image/png": {}}}}
 )
-async def get_common_neighborhoods(city: str, year: int = None):
+async def get_pie_common_crimes(city: str, year: int = None):
     session = database.get_db_session(engine)
     df = pd.read_sql(
         session.query(Crime)
@@ -59,20 +63,54 @@ async def get_common_neighborhoods(city: str, year: int = None):
         session.bind,
     )
 
-    # df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
+    df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
+    df["rubrica"].value_counts().nlargest(5).plot.pie(autopct="%1.1f%%")
+
+    plt.title("Bairros com mais crimes registrados")
+    plt.ylabel("Proporção")
+    plt.tight_layout()
+
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    plt.clf()
+    buf.seek(0)
+    return StreamingResponse(buf, media_type="image/png")
+
+
+@router.get(
+    "/bar/common-neighborhoods/city/{city}",
+    responses={200: {"content": {"image/png": {}}}},
+)
+async def get_bar_common_neighborhoods(city: str, year: int = None):
+    session = database.get_db_session(engine)
+    df = pd.read_sql(
+        session.query(Crime)
+        .filter(
+            and_(Crime.endCidade == city, Crime.latitude != "", Crime.longitude != ""),
+            or_(Crime.ano == year, year == None),
+        )
+        .statement,
+        session.bind,
+    )
+
     df["endBairro"].value_counts().nlargest(10).plot(kind="bar")
+
+    plt.title("Bairros com mais crimes registrados")
+    plt.xlabel("Bairro")
     plt.tight_layout()
 
     buf = BytesIO()
     plt.savefig(buf, format="png")
+    plt.clf()
     buf.seek(0)
     return StreamingResponse(buf, media_type="image/png")
 
 
 @router.get(
-    "/hist-flagrant/city/{city}", responses={200: {"content": {"image/png": {}}}}
+    "/pie/common-neighborhoods/city/{city}",
+    responses={200: {"content": {"image/png": {}}}},
 )
-async def get_hist_flagrant(city: str, year: int = None):
+async def get_pie_common_neighborhoods(city: str, year: int = None):
     session = database.get_db_session(engine)
     df = pd.read_sql(
         session.query(Crime)
@@ -84,19 +122,23 @@ async def get_hist_flagrant(city: str, year: int = None):
         session.bind,
     )
 
-    # df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
-    df["flagrante"].value_counts().plot(kind="bar")
+    df["endBairro"].value_counts().nlargest(10).plot.pie(autopct="%1.1f%%")
+
+    plt.title("Bairros com mais crimes registrados")
+    plt.ylabel("Proporção")
     plt.tight_layout()
 
     buf = BytesIO()
     plt.savefig(buf, format="png")
+    plt.clf()
     buf.seek(0)
     return StreamingResponse(buf, media_type="image/png")
 
+
 @router.get(
-    "/common-solutions/city/{city}", responses={200: {"content": {"image/png": {}}}}
+    "/bar/common-solutions/city/{city}", responses={200: {"content": {"image/png": {}}}}
 )
-async def get_common_solutions(city: str, year: int = None):
+async def get_bar_common_solutions(city: str, year: int = None):
     session = database.get_db_session(engine)
     df = pd.read_sql(
         session.query(Crime)
@@ -108,19 +150,23 @@ async def get_common_solutions(city: str, year: int = None):
         session.bind,
     )
 
-    # df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
     df["solucao"].value_counts().plot(kind="bar")
+
+    plt.title("Soluções mais comuns")
+    plt.xlabel("Solução")
     plt.tight_layout()
 
     buf = BytesIO()
     plt.savefig(buf, format="png")
     buf.seek(0)
+    plt.clf()
     return StreamingResponse(buf, media_type="image/png")
 
+
 @router.get(
-    "/common-police-departments/city/{city}", responses={200: {"content": {"image/png": {}}}}
+    "/pie/common-solutions/city/{city}", responses={200: {"content": {"image/png": {}}}}
 )
-async def get_common_police_departments(city: str, year: int = None):
+async def get_pie_common_solutions(city: str, year: int = None):
     session = database.get_db_session(engine)
     df = pd.read_sql(
         session.query(Crime)
@@ -132,19 +178,53 @@ async def get_common_police_departments(city: str, year: int = None):
         session.bind,
     )
 
-    # df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
+    df["solucao"].value_counts().plot.pie(autopct="%1.1f%%")
+
+    plt.title("Soluções mais comuns")
+    plt.ylabel("Proporção")
+    plt.tight_layout()
+
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    plt.clf()
+    buf.seek(0)
+    return StreamingResponse(buf, media_type="image/png")
+
+
+@router.get(
+    "/bar/common-police-departments/city/{city}",
+    responses={200: {"content": {"image/png": {}}}},
+)
+async def get_bar_common_police_departments(city: str, year: int = None):
+    session = database.get_db_session(engine)
+    df = pd.read_sql(
+        session.query(Crime)
+        .filter(
+            and_(Crime.endCidade == city, Crime.latitude != "", Crime.longitude != ""),
+            or_(Crime.ano == year, year == None),
+        )
+        .statement,
+        session.bind,
+    )
+
     df["delegaciaCircunscricao"].value_counts().plot(kind="bar")
+
+    plt.title("Delegacias com crimes registrados")
+    plt.xlabel("Delegacia")
     plt.tight_layout()
 
     buf = BytesIO()
     plt.savefig(buf, format="png")
+    plt.clf()
     buf.seek(0)
     return StreamingResponse(buf, media_type="image/png")
 
+
 @router.get(
-    "/common-day-period/city/{city}", responses={200: {"content": {"image/png": {}}}}
+    "/pie/common-police-departments/city/{city}",
+    responses={200: {"content": {"image/png": {}}}},
 )
-async def get_common_day_period(city: str, year: int = None):
+async def get_pie_common_police_departments(city: str, year: int = None):
     session = database.get_db_session(engine)
     df = pd.read_sql(
         session.query(Crime)
@@ -156,12 +236,73 @@ async def get_common_day_period(city: str, year: int = None):
         session.bind,
     )
 
-    # df["rubrica"] = df["rubrica"].str.replace("Furto (art. 155) - ", "")
-    df["periodoOcorrencia"].value_counts().plot(kind="bar")
+    df["delegaciaCircunscricao"].value_counts().nlargest(5).plot.pie(autopct="%1.1f%%")
+
+    plt.title("Delegacias com mais crimes registrados")
+    plt.ylabel("Proporção")
     plt.tight_layout()
 
     buf = BytesIO()
     plt.savefig(buf, format="png")
+    plt.clf()
+    buf.seek(0)
+    return StreamingResponse(buf, media_type="image/png")
+
+
+@router.get(
+    "/bar/common-day-period/city/{city}",
+    responses={200: {"content": {"image/png": {}}}},
+)
+async def get_bar_common_day_period(city: str, year: int = None):
+    session = database.get_db_session(engine)
+    df = pd.read_sql(
+        session.query(Crime)
+        .filter(
+            and_(Crime.endCidade == city, Crime.latitude != "", Crime.longitude != ""),
+            or_(Crime.ano == year, year == None),
+        )
+        .statement,
+        session.bind,
+    )
+
+    df["periodoOcorrencia"].value_counts().plot(kind="bar")
+
+    plt.title("Total de  ocorrências por período do dia")
+    plt.xlabel("Período do dia")
+    plt.tight_layout()
+
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    plt.clf()
+    buf.seek(0)
+    return StreamingResponse(buf, media_type="image/png")
+
+
+@router.get(
+    "/pie/common-day-period/city/{city}",
+    responses={200: {"content": {"image/png": {}}}},
+)
+async def get_pie_common_day_period(city: str, year: int = None):
+    session = database.get_db_session(engine)
+    df = pd.read_sql(
+        session.query(Crime)
+        .filter(
+            and_(Crime.endCidade == city, Crime.latitude != "", Crime.longitude != ""),
+            or_(Crime.ano == year, year == None),
+        )
+        .statement,
+        session.bind,
+    )
+
+    df["periodoOcorrencia"].value_counts().plot.pie(autopct="%1.1f%%")
+
+    plt.title("Total de  ocorrências por período do dia")
+    plt.ylabel("Proporção")
+    plt.tight_layout()
+
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    plt.clf()
     buf.seek(0)
     return StreamingResponse(buf, media_type="image/png")
 
